@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Torrent Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/darkly/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { 
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(40, 40, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .form-control {
+            background-color: rgba(0,0,0,0.3);
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+        }
+        .form-control:focus {
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            box-shadow: none;
+            border-color: #375a7f;
+        }
+        .btn-login {
+            padding: 12px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card login-card p-4">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <i class="fa-solid fa-bolt fa-3x text-warning mb-3"></i>
+                <h3 class="fw-bold">Bienvenido</h3>
+                <p class="text-muted">Gestor de Descargas Privado</p>
+            </div>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-danger py-2 text-center text-small">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary text-muted"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Usuario" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary text-muted"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-login shadow">
+                    Entrar <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+            </form>
+        </div>
+        <div class="card-footer bg-transparent border-0 text-center mt-2">
+            <small class="text-muted opacity-50">v1.0 System Ready</small>
+        </div>
+    </div>
+
+</body>
+</html>

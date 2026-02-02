@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Path Management - TorrentAdmin</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: { "display": ["Manrope", "sans-serif"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="flex flex-col h-full grow">
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-3 text-primary">
+                    <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                    </div>
+                    <h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">TorrentFlowST</h2>
+                </div>
+            </div>
+            <div class="flex flex-1 justify-end gap-4 items-center">
+                <span class="text-sm font-medium">{{ current_user.username }}</span>
+                <div class="size-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">
+                    {{ current_user.username[0].upper() }}
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1">
+            <aside
+                class="hidden lg:flex w-64 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark p-4 gap-8">
+                <div class="flex flex-col gap-6">
+                    <div class="px-2">
+                        <h1
+                            class="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-widest opacity-60">
+                            Panel de administración</h1>
+                    </div>
+                    <nav class="flex flex-col gap-1">
+                        <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"
+                            href="/">
+                            <span class="material-symbols-outlined">dashboard</span>
+                            <p class="text-sm font-medium">Panel de control</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"
+                            href="/admin/users">
+                            <span class="material-symbols-outlined">group</span>
+                            <p class="text-sm font-medium">Gestión de usuarios</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-all"
+                            href="/admin/paths">
+                            <span class="material-symbols-outlined"
+                                style="font-variation-settings: 'FILL' 1">folder_open</span>
+                            <p class="text-sm font-bold">Gestión de rutas</p>
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <main
+                class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark p-6 lg:p-10 overflow-y-auto">
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="mb-6 p-4 bg-primary/10 text-primary rounded-lg border border-primary/20 text-sm">
+                    {{ messages[0] }}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 text-white">
+                    <div class="flex flex-col gap-1">
+                        <h2 class="text-3xl font-black tracking-tight">Gestión de rutas</h2>
+                        <p class="text-slate-500">Configure directorios para descargas de usuarios.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 mb-8 shadow-sm">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><span
+                            class="material-symbols-outlined">add_box</span> Añadir nueva ruta</h3>
+                    <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input name="alias"
+                            class="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm"
+                            placeholder="Alias (e.g. Películas)" required>
+                        <input name="full_path"
+                            class="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm"
+                            placeholder="Ruta del servidor" required>
+                        <button type="submit"
+                            class="bg-primary text-white rounded-lg font-bold text-sm hover:bg-primary/90 transition-all py-2">Guardar
+                            ruta</button>
+                    </form>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Etiqueta</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Ruta del servidor
+                                    </th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">Estado
+                                    </th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                {% for path in paths %}
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="p-2 bg-primary/10 text-primary rounded-lg">
+                                                <span class="material-symbols-outlined text-xl">folder</span>
+                                            </div>
+                                            <span class="font-bold text-slate-900 dark:text-white">{{ path.alias
+                                                }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <code
+                                            class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-600 dark:text-slate-400">{{ path.full_path }}</code>
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-white">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                            Activo
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end gap-3">
+                                            <button onclick="fetch('/admin/open_path/{{ path.id }}')"
+                                                class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                                                title="Abrir carpeta en PC">
+                                                <span class="material-symbols-outlined text-xl">folder_open</span>
+                                            </button>
+
+                                            <form action="/admin/delete_path/{{ path.id }}" method="POST"
+                                                onsubmit="return confirm('¿Seguro que quieres eliminar esta ruta?');"
+                                                style="display: inline;">
+                                                <button type="submit"
+                                                    class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                                                    title="Eliminar ruta">
+                                                    <span class="material-symbols-outlined text-xl">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

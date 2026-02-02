@@ -1,0 +1,11 @@
+services:
+  torrentflow:
+    build: .
+    container_name: torrentflow_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./torrents.db:/app/torrents.db
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
