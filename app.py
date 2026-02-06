@@ -126,15 +126,22 @@ def api_updates():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Variable para recordar el usuario si falla
+    username_input = ''
+
     if request.method == 'POST':
-        username = request.form.get('username')
+        username_input = request.form.get('username')
         password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username_input).first()
+        
         if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('index'))
+        
         flash('Credenciales inválidas.', 'error')
-    return render_template('login.html')
+    
+    # Pasamos 'last_username' al HTML para que rellene el campo
+    return render_template('login.html', last_username=username_input)
 
 @app.route('/logout')
 @login_required
@@ -330,6 +337,11 @@ def delete_path(path_id):
     db.session.delete(AllowedPath.query.get(path_id))
     db.session.commit()
     return redirect(url_for('admin_paths'))
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.png', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
     if not os.path.exists('torrents.db'):
